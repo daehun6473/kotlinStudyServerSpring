@@ -10,7 +10,7 @@
              , body
              , created_at as createdAt
         FROM posts
-        ORDER BY id ASC
+        ORDER BY id::INTEGER ASC
     </select>
 
     <select id="getOneOfList" resultType="com.example.kotlinStudyServer.model.Post">
@@ -30,5 +30,22 @@
         select count(*) as maxCount
         from posts
     </select>
+
+    <insert id="uploadPost">
+        INSERT INTO posts (
+            id,
+            user_id,
+            title,
+            body,
+            created_at
+        )
+        VALUES (
+                       (SELECT COALESCE(MAX(CAST(id AS INTEGER)),0) + 1 FROM posts),
+                       #{userId},
+                       #{title},
+                       #{body},
+                       NOW()
+               )
+    </insert>
 
 </mapper>

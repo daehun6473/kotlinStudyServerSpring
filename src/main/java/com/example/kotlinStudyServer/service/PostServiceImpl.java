@@ -5,7 +5,9 @@ import com.example.kotlinStudyServer.model.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -28,4 +30,23 @@ public class PostServiceImpl implements PostService {
         }
         return result;
     }
+
+    @Override
+    public List<Post> upsertList(Map<String, Object> params) {
+
+        String userId = (String) params.get("userId");
+        String title = (String) params.get("title");
+        String body = (String) params.get("body");
+
+        Map<String, Object> insertParams = new HashMap<>();
+        insertParams.put("userId", userId);
+        insertParams.put("title", title);
+        insertParams.put("body", body);
+
+        mapper.uploadPost(insertParams);
+        List<Post> postResult = mapper.getListALL();
+        return postResult;
+    }
+
+
 }
